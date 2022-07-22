@@ -3,6 +3,8 @@ package artifact.example;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -49,8 +51,8 @@ public class UploadExcel {
 			ArrayList<Data> lista = new ArrayList<Data>();
 
 			// ITERO EL EXCEL - PARTE EN 1 PORQUE NO QUIERO PROCESAR LOS TITULOS
-			// for (int i = 1; i < sheet.getLastRowNum(); i++) {
-			for (int i = 1; i < 10000; i++) {
+			//for (int i = 1; i < sheet.getLastRowNum(); i++) {
+			for (int i = 1; i < 100; i++) {
 
 				Row rowData = sheet.getRow(i);
 				Cell cellAreaAdministrativa = rowData.getCell(0);
@@ -108,11 +110,36 @@ public class UploadExcel {
 //				System.out.println("Fila: " + i + " - 15.Usuario: " + cellUsuario);
 //				System.out.println("");
 			}
-
+			
+			
+			// LOGICA PERSISTENCIA BDD
+			Connection connection = ConectarBDD.conectar();
+			
+			//SE PREPARA LA CONSULTA SQL (PRUEBA - SOLO INSERTAREMOS EL PRIMER REGISTRO)
+			PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO DATA1 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			preparedStatement.setString(1, lista.get(0).getAreaAdministrativa());
+			preparedStatement.setString(2, lista.get(0).getSituacion());
+			preparedStatement.setString(3, lista.get(0).getiDTramoCableOptico());
+			preparedStatement.setString(4, lista.get(0).getCodigoTramoCableOptico());
+			preparedStatement.setDouble(5, lista.get(0).getCantidadFibras());
+			preparedStatement.setString(6, lista.get(0).getLongitudEstimadaTotal());
+			preparedStatement.setString(7, lista.get(0).getPropiedad());
+			preparedStatement.setString(8, lista.get(0).getPropietario());
+			preparedStatement.setString(9, lista.get(0).getTrfoOtActual());
+			preparedStatement.setDouble(10, lista.get(0).getTrfoOtOriginal());
+			preparedStatement.setString(11, lista.get(0).getOrdenDeTrabajo());
+			preparedStatement.setString(12, lista.get(0).getoTFechaImplantacion());
+			preparedStatement.setString(13, lista.get(0).getoTEstadoActual());
+			preparedStatement.setString(14, lista.get(0).getRuta());
+			preparedStatement.setString(15, lista.get(0).getUsuario());
+			
+			//EJECUTA LA QUERY DE INSERCIÓN
+			int resultQuery = preparedStatement.executeUpdate();
+			System.out.println("Informe BDD: " + resultQuery + " lineas insertadas");
+			
 			// CALCULO EN SEGUNDOS EN LA EJECUCIÓN DEL PROCESO
 			long fin = System.currentTimeMillis();
 			double segundos = (double) ((fin - inicio) / 1000);
-
 			System.out.println("CARGA EXITOSA / " + lista.size() + " registros en " + segundos + " segundos");
 
 		} catch (Exception e) {
