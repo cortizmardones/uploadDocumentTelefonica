@@ -63,7 +63,7 @@ public class UploadExcel {
 			
 			// ITERO EL EXCEL - PARTE EN 1 PORQUE NO QUIERO PROCESAR LOS TITULOS
 			//for (int i = 1; i < sheet.getLastRowNum(); i++) {
-			for (int i = 1; i < 1001; i++) {
+			for (int i = 1; i < 250_001; i++) {
 
 				Row rowData = sheet.getRow(i);
 				Cell cellAreaAdministrativa = rowData.getCell(0);
@@ -132,7 +132,7 @@ public class UploadExcel {
 				// AGREGO LOGICA DE CONTADOR DE INSERCIONES EN BDD.
 				contadorInsercionesBDD = contadorInsercionesBDD + resultQuery;
 			}
-			
+						
 			// INFORME INSERCIONES SQL
 			System.out.println("Informe BDD: " + contadorInsercionesBDD + " lineas insertadas");
 			
@@ -140,6 +140,9 @@ public class UploadExcel {
 			long fin = System.currentTimeMillis();
 			double segundos = (double) ((fin - inicio) / 1000);
 			System.out.println("CARGA EXITOSA / " + lista.size() + " registros en " + segundos + " segundos");
+			
+			//LIMPIO LA LISTA PARA LIBERAR MEMORIA
+			lista.clear();
 
 		} catch (Exception e) {
 
