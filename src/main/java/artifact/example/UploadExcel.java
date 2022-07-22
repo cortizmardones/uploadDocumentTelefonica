@@ -18,6 +18,8 @@ public class UploadExcel {
 	public static void main(String[] args) throws Exception {
 
 		try {
+			
+			int resultQuery = 0;
 
 			// VARIABLE PARA MEDIR EL TIEMPO DE EJECUCIÓN DEL PROCESO
 			long inicio = System.currentTimeMillis();
@@ -49,10 +51,19 @@ public class UploadExcel {
 
 			// ARRAYLIST PARA GUARDAR LOS ELEMENTOS EN BDD
 			ArrayList<Data> lista = new ArrayList<Data>();
+			
+			//ABRO LA CONEXION A LA BDD
+			Connection connection = ConectarBDD.conectar();
 
+			//GENERO NUEVO CONTADOR YA QUE el CONTADOR i ESTA EN 1 EN ESTE MOMENTO (PORQUE NO QUIERO RECORRER LOS TITULOS)
+			int j = 0;
+			
+			// GENERO UNA VARIABLE CONTADOR PARA REGISTRAR LA CANTIDAD DE ISNERCIONES EN LA BDD
+			int contadorInsercionesBDD = 0;
+			
 			// ITERO EL EXCEL - PARTE EN 1 PORQUE NO QUIERO PROCESAR LOS TITULOS
 			//for (int i = 1; i < sheet.getLastRowNum(); i++) {
-			for (int i = 1; i < 100; i++) {
+			for (int i = 1; i < 1001; i++) {
 
 				Row rowData = sheet.getRow(i);
 				Cell cellAreaAdministrativa = rowData.getCell(0);
@@ -91,51 +102,39 @@ public class UploadExcel {
 
 				// AGREGO EL OBJETO A LA LISTA PARA IR ALMACENANDO CADA FILA PARA SER INSERTADA DESPUES EN BDD
 				lista.add(data);
-
-//				//IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA
-//				System.out.println("Fila: " + i + " - 1.Área Administrativa: " + cellAreaAdministrativa);
-//				System.out.println("Fila: " + i + " - 2.Situación: " + cellSituacion);
-//				System.out.println("Fila: " + i + " - 3.ID Tramo Cable Óptico: " + cellIdTramoCableOptico);
-//				System.out.println("Fila: " + i + " - 4.Código tramo cable óptico: " + cellcodigoTramoCableOptico);
-//				System.out.println("Fila: " + i + " - 5.Cantidad fibras: " + cellCantidadFibras);
-//				System.out.println("Fila: " + i + " - 6.Longitud estimada Total: " + cellLongitudEstimadaTotal);
-//				System.out.println("Fila: " + i + " - 7.Propiedad: " + cellPropiedad);
-//				System.out.println("Fila: " + i + " - 8.Propietario: " + cellPropietario);
-//				System.out.println("Fila: " + i + " - 9.TRFO OT Actual: " + cellTrfoActual);
-//				System.out.println("Fila: " + i + " - 10.TRFO OT Original: " + i + " , (10) " + cellTrfoOriginal);
-//				System.out.println("Fila: " + i + " - 11.Orden trabajo: " + cellOrdenTrabajo);
-//				System.out.println("Fila: " + i + " - 12.OT Fecha Implantación: " + cellOtFechaImplantacion);
-//				System.out.println("Fila: " + i + " - 13.OT Estado actual: " + CellOtEstadoActual);
-//				System.out.println("Fila: " + i + " - 14.Ruta: " + cellRuta);
-//				System.out.println("Fila: " + i + " - 15.Usuario: " + cellUsuario);
-//				System.out.println("");
+				
+				//SE PREPARA LA CONSULTA SQL (PRUEBA - SOLO INSERTAREMOS EL PRIMER REGISTRO)
+				PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO DATA1 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				
+				preparedStatement.setInt(1, j+1);
+				preparedStatement.setString(2, lista.get(j).getAreaAdministrativa());
+				preparedStatement.setString(3, lista.get(j).getSituacion());
+				preparedStatement.setString(4, lista.get(j).getiDTramoCableOptico());
+				preparedStatement.setString(5, lista.get(j).getCodigoTramoCableOptico());
+				preparedStatement.setDouble(6, lista.get(j).getCantidadFibras());
+				preparedStatement.setString(7, lista.get(j).getLongitudEstimadaTotal());
+				preparedStatement.setString(8, lista.get(j).getPropiedad());
+				preparedStatement.setString(9, lista.get(j).getPropietario());
+				preparedStatement.setString(10, lista.get(j).getTrfoOtActual());
+				preparedStatement.setDouble(11, lista.get(j).getTrfoOtOriginal());
+				preparedStatement.setString(12, lista.get(j).getOrdenDeTrabajo());
+				preparedStatement.setString(13, lista.get(j).getoTFechaImplantacion());
+				preparedStatement.setString(14, lista.get(j).getoTEstadoActual());
+				preparedStatement.setString(15, lista.get(j).getRuta());
+				preparedStatement.setString(16, lista.get(j).getUsuario());
+				
+				//AUMENTGO CONTADOR PARA ITERAR INSERCIONES EN BDD
+				j++;
+				
+				//EJECUTA LA QUERY DE INSERCIÓN
+				resultQuery = preparedStatement.executeUpdate();
+				
+				// AGREGO LOGICA DE CONTADOR DE INSERCIONES EN BDD.
+				contadorInsercionesBDD = contadorInsercionesBDD + resultQuery;
 			}
 			
-			
-			// LOGICA PERSISTENCIA BDD
-			Connection connection = ConectarBDD.conectar();
-			
-			//SE PREPARA LA CONSULTA SQL (PRUEBA - SOLO INSERTAREMOS EL PRIMER REGISTRO)
-			PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO DATA1 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-			preparedStatement.setString(1, lista.get(0).getAreaAdministrativa());
-			preparedStatement.setString(2, lista.get(0).getSituacion());
-			preparedStatement.setString(3, lista.get(0).getiDTramoCableOptico());
-			preparedStatement.setString(4, lista.get(0).getCodigoTramoCableOptico());
-			preparedStatement.setDouble(5, lista.get(0).getCantidadFibras());
-			preparedStatement.setString(6, lista.get(0).getLongitudEstimadaTotal());
-			preparedStatement.setString(7, lista.get(0).getPropiedad());
-			preparedStatement.setString(8, lista.get(0).getPropietario());
-			preparedStatement.setString(9, lista.get(0).getTrfoOtActual());
-			preparedStatement.setDouble(10, lista.get(0).getTrfoOtOriginal());
-			preparedStatement.setString(11, lista.get(0).getOrdenDeTrabajo());
-			preparedStatement.setString(12, lista.get(0).getoTFechaImplantacion());
-			preparedStatement.setString(13, lista.get(0).getoTEstadoActual());
-			preparedStatement.setString(14, lista.get(0).getRuta());
-			preparedStatement.setString(15, lista.get(0).getUsuario());
-			
-			//EJECUTA LA QUERY DE INSERCIÓN
-			int resultQuery = preparedStatement.executeUpdate();
-			System.out.println("Informe BDD: " + resultQuery + " lineas insertadas");
+			// INFORME INSERCIONES SQL
+			System.out.println("Informe BDD: " + contadorInsercionesBDD + " lineas insertadas");
 			
 			// CALCULO EN SEGUNDOS EN LA EJECUCIÓN DEL PROCESO
 			long fin = System.currentTimeMillis();
@@ -154,3 +153,22 @@ public class UploadExcel {
 	}
 
 }
+
+
+////IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA (NO BORRAR)
+//System.out.println("Fila: " + i + " - 1.Área Administrativa: " + cellAreaAdministrativa);
+//System.out.println("Fila: " + i + " - 2.Situación: " + cellSituacion);
+//System.out.println("Fila: " + i + " - 3.ID Tramo Cable Óptico: " + cellIdTramoCableOptico);
+//System.out.println("Fila: " + i + " - 4.Código tramo cable óptico: " + cellcodigoTramoCableOptico);
+//System.out.println("Fila: " + i + " - 5.Cantidad fibras: " + cellCantidadFibras);
+//System.out.println("Fila: " + i + " - 6.Longitud estimada Total: " + cellLongitudEstimadaTotal);
+//System.out.println("Fila: " + i + " - 7.Propiedad: " + cellPropiedad);
+//System.out.println("Fila: " + i + " - 8.Propietario: " + cellPropietario);
+//System.out.println("Fila: " + i + " - 9.TRFO OT Actual: " + cellTrfoActual);
+//System.out.println("Fila: " + i + " - 10.TRFO OT Original: " + i + " , (10) " + cellTrfoOriginal);
+//System.out.println("Fila: " + i + " - 11.Orden trabajo: " + cellOrdenTrabajo);
+//System.out.println("Fila: " + i + " - 12.OT Fecha Implantación: " + cellOtFechaImplantacion);
+//System.out.println("Fila: " + i + " - 13.OT Estado actual: " + CellOtEstadoActual);
+//System.out.println("Fila: " + i + " - 14.Ruta: " + cellRuta);
+//System.out.println("Fila: " + i + " - 15.Usuario: " + cellUsuario);
+//System.out.println("");
