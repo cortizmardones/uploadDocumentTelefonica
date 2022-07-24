@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,6 +18,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class UploadExcel {
+	
+	private static EntityManagerFactory entityManagerFactory;
+	private static EntityManager entityManager;
 
 	public static void main(String[] args) throws Exception {
 
@@ -21,7 +28,7 @@ public class UploadExcel {
 			
 			//####################### VARIABLES PARA METRICAS DEL PROCESO #######################
 			
-			// VARIABLE PARA MEDIR EL TIEMPO DE EJECUCI”N DEL PROCESO
+			// VARIABLE PARA MEDIR EL TIEMPO DE EJECUCIÔøΩN DEL PROCESO
 			long inicio = System.currentTimeMillis();
 						
 			// CONTADORES Y ACUMULADORES
@@ -33,7 +40,10 @@ public class UploadExcel {
 			
 			// ABRO LA CONEXION A LA BDD
 			Connection connection = ConectarBDD.conectar();
-						
+			
+			entityManagerFactory = Persistence.createEntityManagerFactory("JPA_POSTGRES");
+			entityManager = entityManagerFactory.createEntityManager();
+			
 			//####################### INICIO PROCESAMIENTO ARCHIVO EXCEL#######################
 
 			// BUSCO EL ARCHIVO EXCEL EN LA RUTA.
@@ -72,7 +82,7 @@ public class UploadExcel {
 				Cell cellRuta = rowData.getCell(13);
 				Cell cellUsuario = rowData.getCell(14);
 
-				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEM¡S VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNARIO.
+				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEMÔøΩS VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNARIO.
 				Data data = new Data();
 				data.setAreaAdministrativa((cellAreaAdministrativa != null ? cellAreaAdministrativa.getStringCellValue() : ""));
 				data.setSituacion(cellSituacion != null ? String.valueOf(cellSituacion.getStringCellValue()) : "");
@@ -93,7 +103,7 @@ public class UploadExcel {
 				// AGREGO EL OBJETO A LA LISTA PARA IR ALMACENANDO CADA FILA PARA SER INSERTADA DESPUES EN BDD.
 				lista.add(data);
 				
-				// SE PREPARA LA CONSULTA SQL.
+				// SE PREPARA LA CONSULTA SQL. (JDBC CL√ÅSICO)
 				PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO DATA1 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 				preparedStatement.setInt(1, j+1);
 				preparedStatement.setString(2, lista.get(j).getAreaAdministrativa());
@@ -112,20 +122,42 @@ public class UploadExcel {
 				preparedStatement.setString(15, lista.get(j).getRuta());
 				preparedStatement.setString(16, lista.get(j).getUsuario());
 				
-				// AUMENTO CONTADOR PARA ITERAR INSERCIONES EN BDD.
-				j++;
-				
-				// EJECUTA LA QUERY DE INSERCI”N.
+				// EJECUTA LA QUERY DE INSERCIÔøΩN.
 				resultQuery = preparedStatement.executeUpdate();
 				
 				// AGREGO LOGICA DE CONTADOR DE INSERCIONES EN BDD.
 				contadorInsercionesBDD = contadorInsercionesBDD + resultQuery;
+				
+				
+				// SE PREPARA LA CONSULTA SQL Y SE EJCUTA EN EL MOMENTO. (JPA)
+			    entityManager.createNativeQuery("INSERT INTO DATA2 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+			    	.setParameter(1, j+1)
+			    	.setParameter(2, lista.get(j).getAreaAdministrativa())
+			    	.setParameter(3, lista.get(j).getSituacion())
+			    	.setParameter(4, lista.get(j).getiDTramoCableOptico())
+			    	.setParameter(5, lista.get(j).getCodigoTramoCableOptico())
+			    	.setParameter(6, lista.get(j).getCantidadFibras())
+			    	.setParameter(7, lista.get(j).getLongitudEstimadaTotal())
+			    	.setParameter(8, lista.get(j).getPropiedad())
+			    	.setParameter(9, lista.get(j).getPropietario())
+					.setParameter(10, lista.get(j).getTrfoOtActual())
+					.setParameter(11, lista.get(j).getTrfoOtOriginal())
+					.setParameter(12, lista.get(j).getOrdenDeTrabajo())
+					.setParameter(13, lista.get(j).getoTFechaImplantacion())
+					.setParameter(14, lista.get(j).getoTEstadoActual())
+					.setParameter(15, lista.get(j).getRuta())
+					.setParameter(16, lista.get(j).getUsuario())
+			      .executeUpdate();
+				
+				// AUMENTO CONTADOR PARA ITERAR INSERCIONES EN BDD.
+				j++;
+					
 			}
 						
 			// INFORME INSERCIONES SQL.
 			System.out.println("Informe BDD: " + contadorInsercionesBDD + " lineas insertadas");
 			
-			// CALCULO EN SEGUNDOS EN LA EJECUCI”N DEL PROCESO.
+			// CALCULO EN SEGUNDOS EN LA EJECUCIÔøΩN DEL PROCESO.
 			long fin = System.currentTimeMillis();
 			double segundos = (double) ((fin - inicio) / 1000);
 			System.out.println("CARGA EXITOSA / " + lista.size() + " registros en " + segundos + " segundos");
@@ -141,7 +173,7 @@ public class UploadExcel {
 			// CAPTURO EXCEPTION Y LA IMPRIMO EN CASO DE ERROR (NO DETIENE EL RUNTIME).
 			e.printStackTrace();
 
-			// LANZO UNA EXCEPCI”N (SI DETIENE EL RUNTIME).
+			// LANZO UNA EXCEPCIÔøΩN (SI DETIENE EL RUNTIME).
 			throw new Exception();
 		}
 
@@ -168,10 +200,10 @@ public class UploadExcel {
 
 
 ////IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA (NO BORRAR)
-//System.out.println("Fila: " + i + " - 1.¡rea Administrativa: " + cellAreaAdministrativa);
-//System.out.println("Fila: " + i + " - 2.SituaciÛn: " + cellSituacion);
-//System.out.println("Fila: " + i + " - 3.ID Tramo Cable ”ptico: " + cellIdTramoCableOptico);
-//System.out.println("Fila: " + i + " - 4.CÛdigo tramo cable Ûptico: " + cellcodigoTramoCableOptico);
+//System.out.println("Fila: " + i + " - 1.ÔøΩrea Administrativa: " + cellAreaAdministrativa);
+//System.out.println("Fila: " + i + " - 2.SituaciÔøΩn: " + cellSituacion);
+//System.out.println("Fila: " + i + " - 3.ID Tramo Cable ÔøΩptico: " + cellIdTramoCableOptico);
+//System.out.println("Fila: " + i + " - 4.CÔøΩdigo tramo cable ÔøΩptico: " + cellcodigoTramoCableOptico);
 //System.out.println("Fila: " + i + " - 5.Cantidad fibras: " + cellCantidadFibras);
 //System.out.println("Fila: " + i + " - 6.Longitud estimada Total: " + cellLongitudEstimadaTotal);
 //System.out.println("Fila: " + i + " - 7.Propiedad: " + cellPropiedad);
@@ -179,7 +211,7 @@ public class UploadExcel {
 //System.out.println("Fila: " + i + " - 9.TRFO OT Actual: " + cellTrfoActual);
 //System.out.println("Fila: " + i + " - 10.TRFO OT Original: " + i + " , (10) " + cellTrfoOriginal);
 //System.out.println("Fila: " + i + " - 11.Orden trabajo: " + cellOrdenTrabajo);
-//System.out.println("Fila: " + i + " - 12.OT Fecha ImplantaciÛn: " + cellOtFechaImplantacion);
+//System.out.println("Fila: " + i + " - 12.OT Fecha ImplantaciÔøΩn: " + cellOtFechaImplantacion);
 //System.out.println("Fila: " + i + " - 13.OT Estado actual: " + CellOtEstadoActual);
 //System.out.println("Fila: " + i + " - 14.Ruta: " + cellRuta);
 //System.out.println("Fila: " + i + " - 15.Usuario: " + cellUsuario);
