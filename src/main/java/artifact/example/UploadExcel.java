@@ -19,10 +19,22 @@ public class UploadExcel {
 
 		try {
 			
-			int resultQuery = 0;
-
+			//####################### VARIABLES PARA METRICAS DEL PROCESO #######################
+			
 			// VARIABLE PARA MEDIR EL TIEMPO DE EJECUCIÓN DEL PROCESO
 			long inicio = System.currentTimeMillis();
+						
+			// CONTADORES Y ACUMULADORES
+			int j = 0;
+			int contadorInsercionesBDD = 0;
+			int resultQuery = 0;
+			
+			//####################### OBTENGO LA INSTANCIA ESTATICA DE CONEXION A LA BDD #######################
+			
+			// ABRO LA CONEXION A LA BDD
+			Connection connection = ConectarBDD.conectar();
+						
+			//####################### INICIO PROCESAMIENTO ARCHIVO EXCEL#######################
 
 			// BUSCO EL ARCHIVO EXCEL EN LA RUTA.
 			File file = new File("C:\\uploadExcel\\7747.xlsx");
@@ -35,35 +47,13 @@ public class UploadExcel {
 
 			// CREO EL OBJETO SHEET QUE REPRESENTA LA PRIMERA HOJA DEL EXCEL.
 			Sheet sheet = workbook.getSheetAt(0);
-
-//			// OBTENGO LA PRIMERA FILA (ENCABEZADOS / HEADER)
-//			Row rowHeader = sheet.getRow(0);
-//			
-//			// RECORRER LAS CABECERAS. (SON 14 REGISTROS POR FILA)
-//			for (int i = 0; i < rowHeader.getPhysicalNumberOfCells(); i++) {
-//				
-//				// CREO UNA CELDA EN CADA ELEMENTO PARA PODER LEER SU VALOR
-//				Cell cellHeader = rowHeader.getCell(i);
-//				
-//				//IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA
-//				System.out.println(i+1 + " : " + cellHeader.getStringCellValue());
-//			}
-
-			// ARRAYLIST PARA GUARDAR LOS ELEMENTOS EN BDD
+			
+			// ARRAYLIST PARA GUARDAR LOS ELEMENTOS DEL EXCEL COMPLETO Y FINALMENTE ALMACENARLOS EN LA BDD.
 			ArrayList<Data> lista = new ArrayList<Data>();
 			
-			//ABRO LA CONEXION A LA BDD
-			Connection connection = ConectarBDD.conectar();
-
-			//GENERO NUEVO CONTADOR YA QUE el CONTADOR i ESTA EN 1 EN ESTE MOMENTO (PORQUE NO QUIERO RECORRER LOS TITULOS)
-			int j = 0;
-			
-			// GENERO UNA VARIABLE CONTADOR PARA REGISTRAR LA CANTIDAD DE ISNERCIONES EN LA BDD
-			int contadorInsercionesBDD = 0;
-			
-			// ITERO EL EXCEL - PARTE EN 1 PORQUE NO QUIERO PROCESAR LOS TITULOS
-			//for (int i = 1; i < sheet.getLastRowNum(); i++) {
-			for (int i = 1; i < 250_001; i++) {
+			// ITERO EL EXCEL - PARTE EN 1 PORQUE NO QUIERO PROCESAR LOS TITULOS.
+			for (int i = 1; i < sheet.getLastRowNum()-2; i++) {
+			//for (int i = 1; i < 250_001; i++) {
 
 				Row rowData = sheet.getRow(i);
 				Cell cellAreaAdministrativa = rowData.getCell(0);
@@ -82,7 +72,7 @@ public class UploadExcel {
 				Cell cellRuta = rowData.getCell(13);
 				Cell cellUsuario = rowData.getCell(14);
 
-				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEMÁS VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNIARIO
+				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEMÁS VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNARIO.
 				Data data = new Data();
 				data.setAreaAdministrativa((cellAreaAdministrativa != null ? cellAreaAdministrativa.getStringCellValue() : ""));
 				data.setSituacion(cellSituacion != null ? String.valueOf(cellSituacion.getStringCellValue()) : "");
@@ -100,12 +90,11 @@ public class UploadExcel {
 				data.setRuta(cellRuta != null ? cellRuta.getStringCellValue() : "");
 				data.setUsuario(cellUsuario != null ? cellUsuario.getStringCellValue() : "");
 
-				// AGREGO EL OBJETO A LA LISTA PARA IR ALMACENANDO CADA FILA PARA SER INSERTADA DESPUES EN BDD
+				// AGREGO EL OBJETO A LA LISTA PARA IR ALMACENANDO CADA FILA PARA SER INSERTADA DESPUES EN BDD.
 				lista.add(data);
 				
-				//SE PREPARA LA CONSULTA SQL (PRUEBA - SOLO INSERTAREMOS EL PRIMER REGISTRO)
+				// SE PREPARA LA CONSULTA SQL.
 				PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO DATA1 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-				
 				preparedStatement.setInt(1, j+1);
 				preparedStatement.setString(2, lista.get(j).getAreaAdministrativa());
 				preparedStatement.setString(3, lista.get(j).getSituacion());
@@ -123,39 +112,59 @@ public class UploadExcel {
 				preparedStatement.setString(15, lista.get(j).getRuta());
 				preparedStatement.setString(16, lista.get(j).getUsuario());
 				
-				//AUMENTGO CONTADOR PARA ITERAR INSERCIONES EN BDD
+				// AUMENTO CONTADOR PARA ITERAR INSERCIONES EN BDD.
 				j++;
 				
-				//EJECUTA LA QUERY DE INSERCIÓN
+				// EJECUTA LA QUERY DE INSERCIÓN.
 				resultQuery = preparedStatement.executeUpdate();
 				
 				// AGREGO LOGICA DE CONTADOR DE INSERCIONES EN BDD.
 				contadorInsercionesBDD = contadorInsercionesBDD + resultQuery;
 			}
 						
-			// INFORME INSERCIONES SQL
+			// INFORME INSERCIONES SQL.
 			System.out.println("Informe BDD: " + contadorInsercionesBDD + " lineas insertadas");
 			
-			// CALCULO EN SEGUNDOS EN LA EJECUCIÓN DEL PROCESO
+			// CALCULO EN SEGUNDOS EN LA EJECUCIÓN DEL PROCESO.
 			long fin = System.currentTimeMillis();
 			double segundos = (double) ((fin - inicio) / 1000);
 			System.out.println("CARGA EXITOSA / " + lista.size() + " registros en " + segundos + " segundos");
 			
-			//LIMPIO LA LISTA PARA LIBERAR MEMORIA
+			// LIMPIO LA LISTA PARA LIBERAR MEMORIA.
 			lista.clear();
+			
+			// CERRAR CONEXION.
+			connection.close();
 
 		} catch (Exception e) {
 
-			// CAPTURO EXCEPTION Y LA IMPRIMO EN CASO DE ERROR (NO DETIENE EL RUNTIME)
+			// CAPTURO EXCEPTION Y LA IMPRIMO EN CASO DE ERROR (NO DETIENE EL RUNTIME).
 			e.printStackTrace();
 
-			// LANZO UNA EXCEPCIÓN (SI DETIENE EL RUNTIME)
+			// LANZO UNA EXCEPCIÓN (SI DETIENE EL RUNTIME).
 			throw new Exception();
 		}
 
 	}
 
 }
+
+
+
+////IMPRIMO POR CONSOLA EL VALOR DELOS ENCABEZADOS (NO BORRAR)
+//// OBTENGO LA PRIMERA FILA (ENCABEZADOS / HEADER)
+//Row rowHeader = sheet.getRow(0);
+//
+//// RECORRER LAS CABECERAS. (SON 14 REGISTROS POR FILA)
+//for (int i = 0; i < rowHeader.getPhysicalNumberOfCells(); i++) {
+//	
+//	// CREO UNA CELDA EN CADA ELEMENTO PARA PODER LEER SU VALOR
+//	Cell cellHeader = rowHeader.getCell(i);
+//	
+//	//IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA
+//	System.out.println(i+1 + " : " + cellHeader.getStringCellValue());
+//}
+
 
 
 ////IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA (NO BORRAR)
