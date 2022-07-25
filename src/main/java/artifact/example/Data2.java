@@ -10,6 +10,9 @@ import javax.persistence.Table;
 public class Data2 {
 	
 	@Id
+	@Column(name = "id" , precision = 1 , unique = true)
+	private long id;
+	
 	@Column(name = "area_administrativa")
 	private String areaAdministrativa;
 	
@@ -23,7 +26,7 @@ public class Data2 {
 	private String codigoTramoCableOptico;
 	
 	@Column(name = "cantidad_fibras")
-	private double cantidadFibras;
+	private String cantidadFibras;
 	
 	@Column(name = "longitud_estimada_total")
 	private String longitudEstimadaTotal;
@@ -38,7 +41,7 @@ public class Data2 {
 	private String trfoOtActual;
 	
 	@Column(name = "trfo_ot_original")
-	private double trfoOtOriginal;
+	private String trfoOtOriginal;
 	
 	@Column(name = "orden_trabajo")
 	private String ordenDeTrabajo;
@@ -58,7 +61,8 @@ public class Data2 {
 	public Data2() {
 	}
 
-	public Data2(String areaAdministrativa, String situacion, String iDTramoCableOptico, String codigoTramoCableOptico, double cantidadFibras, String longitudEstimadaTotal, String propiedad, String propietario, String trfoOtActual, double trfoOtOriginal, String ordenDeTrabajo, String oTFechaImplantacion, String oTEstadoActual, String ruta, String usuario) {
+	public Data2(long id , String areaAdministrativa, String situacion, String iDTramoCableOptico, String codigoTramoCableOptico, String cantidadFibras, String longitudEstimadaTotal, String propiedad, String propietario, String trfoOtActual, String trfoOtOriginal, String ordenDeTrabajo, String oTFechaImplantacion, String oTEstadoActual, String ruta, String usuario) {
+		this.id = id;
 		this.areaAdministrativa = areaAdministrativa;
 		this.situacion = situacion;
 		this.iDTramoCableOptico = iDTramoCableOptico;
@@ -74,6 +78,15 @@ public class Data2 {
 		this.oTEstadoActual = oTEstadoActual;
 		this.ruta = ruta;
 		this.usuario = usuario;
+	}
+	
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getAreaAdministrativa() {
@@ -108,11 +121,11 @@ public class Data2 {
 		this.codigoTramoCableOptico = codigoTramoCableOptico;
 	}
 
-	public double getCantidadFibras() {
+	public String getCantidadFibras() {
 		return cantidadFibras;
 	}
 
-	public void setCantidadFibras(double cantidadFibras) {
+	public void setCantidadFibras(String cantidadFibras) {
 		this.cantidadFibras = cantidadFibras;
 	}
 
@@ -148,11 +161,11 @@ public class Data2 {
 		this.trfoOtActual = trfoOtActual;
 	}
 
-	public double getTrfoOtOriginal() {
+	public String getTrfoOtOriginal() {
 		return trfoOtOriginal;
 	}
 
-	public void setTrfoOtOriginal(double trfoOtOriginal) {
+	public void setTrfoOtOriginal(String trfoOtOriginal) {
 		this.trfoOtOriginal = trfoOtOriginal;
 	}
 

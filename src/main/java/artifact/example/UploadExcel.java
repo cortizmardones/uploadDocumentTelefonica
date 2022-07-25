@@ -41,7 +41,8 @@ public class UploadExcel {
 			// ABRO LA CONEXION A LA BDD
 			Connection connection = ConectarBDD.conectar();
 			
-			entityManagerFactory = Persistence.createEntityManagerFactory("JPA_POSTGRES");
+			// OBTENGO LA CONFIGURACION DEL ARCHIVO HIBERNATE (META-INF/PERSISTENCE.XML)
+			entityManagerFactory = Persistence.createEntityManagerFactory("persist_unit_jpa");
 			entityManager = entityManagerFactory.createEntityManager();
 			
 			//####################### INICIO PROCESAMIENTO ARCHIVO EXCEL#######################
@@ -60,10 +61,11 @@ public class UploadExcel {
 			
 			// ARRAYLIST PARA GUARDAR LOS ELEMENTOS DEL EXCEL COMPLETO Y FINALMENTE ALMACENARLOS EN LA BDD.
 			ArrayList<Data> lista = new ArrayList<Data>();
+			ArrayList<Data2> lista2 = new ArrayList<Data2>();
 			
 			// ITERO EL EXCEL - PARTE EN 1 PORQUE NO QUIERO PROCESAR LOS TITULOS.
 			for (int i = 1; i < sheet.getLastRowNum()-2; i++) {
-			//for (int i = 1; i < 250_001; i++) {
+			//for (int i = 1; i < 10; i++) {
 
 				Row rowData = sheet.getRow(i);
 				Cell cellAreaAdministrativa = rowData.getCell(0);
@@ -99,7 +101,7 @@ public class UploadExcel {
 				data.setoTEstadoActual(CellOtEstadoActual != null ? CellOtEstadoActual.getStringCellValue() : "");
 				data.setRuta(cellRuta != null ? cellRuta.getStringCellValue() : "");
 				data.setUsuario(cellUsuario != null ? cellUsuario.getStringCellValue() : "");
-
+				
 				// AGREGO EL OBJETO A LA LISTA PARA IR ALMACENANDO CADA FILA PARA SER INSERTADA DESPUES EN BDD.
 				lista.add(data);
 				
@@ -129,29 +131,57 @@ public class UploadExcel {
 				contadorInsercionesBDD = contadorInsercionesBDD + resultQuery;
 				
 				
+				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEM�S VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNARIO.
+				Data2 data2 = new Data2();
+				data2.setId(j+1);
+				data2.setAreaAdministrativa((cellAreaAdministrativa != null ? cellAreaAdministrativa.getStringCellValue() : ""));
+				data2.setSituacion(cellSituacion != null ? String.valueOf(cellSituacion.getStringCellValue()) : "");
+				data2.setiDTramoCableOptico(cellIdTramoCableOptico != null ? String.valueOf(cellIdTramoCableOptico.getNumericCellValue()): "");
+				data2.setCodigoTramoCableOptico(cellcodigoTramoCableOptico != null ? cellcodigoTramoCableOptico.getStringCellValue() : "");
+				data2.setCantidadFibras(cellCantidadFibras != null ? String.valueOf(cellCantidadFibras.getNumericCellValue()) : "");
+				data2.setLongitudEstimadaTotal(cellLongitudEstimadaTotal != null? String.valueOf(cellLongitudEstimadaTotal.getNumericCellValue()): "");
+				data2.setPropiedad(cellPropiedad != null ? cellPropiedad.getStringCellValue() : "");
+				data2.setPropietario(cellPropietario != null ? cellPropietario.getStringCellValue() : "");
+				data2.setTrfoOtActual(cellTrfoActual != null ? cellTrfoActual.getStringCellValue() : "");
+				data2.setTrfoOtOriginal(cellTrfoOriginal != null ? String.valueOf(cellTrfoOriginal.getNumericCellValue()) : "");
+				data2.setOrdenDeTrabajo(cellOrdenTrabajo != null ? cellOrdenTrabajo.getStringCellValue() : "");
+				data2.setoTFechaImplantacion(cellOtFechaImplantacion != null ? cellOtFechaImplantacion.getStringCellValue() : "");
+				data2.setoTEstadoActual(CellOtEstadoActual != null ? CellOtEstadoActual.getStringCellValue() : "");
+				data2.setRuta(cellRuta != null ? cellRuta.getStringCellValue() : "");
+				data2.setUsuario(cellUsuario != null ? cellUsuario.getStringCellValue() : "");
+				
+				// AGREGO EL OBJETO A LA LISTA PARA IR ALMACENANDO CADA FILA PARA SER INSERTADA DESPUES EN BDD.
+				lista2.add(data2);
+				
+				// TENGO QUE HACER EL METODO TRANSACTIONAL PARA PODER OPERAR CON NATIVE QUERYS
+				entityManager.getTransaction().begin();
+				
 				// SE PREPARA LA CONSULTA SQL Y SE EJCUTA EN EL MOMENTO. (JPA)
 			    entityManager.createNativeQuery("INSERT INTO DATA2 VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
-			    	.setParameter(1, j+1)
-			    	.setParameter(2, lista.get(j).getAreaAdministrativa())
-			    	.setParameter(3, lista.get(j).getSituacion())
-			    	.setParameter(4, lista.get(j).getiDTramoCableOptico())
-			    	.setParameter(5, lista.get(j).getCodigoTramoCableOptico())
-			    	.setParameter(6, lista.get(j).getCantidadFibras())
-			    	.setParameter(7, lista.get(j).getLongitudEstimadaTotal())
-			    	.setParameter(8, lista.get(j).getPropiedad())
-			    	.setParameter(9, lista.get(j).getPropietario())
-					.setParameter(10, lista.get(j).getTrfoOtActual())
-					.setParameter(11, lista.get(j).getTrfoOtOriginal())
-					.setParameter(12, lista.get(j).getOrdenDeTrabajo())
-					.setParameter(13, lista.get(j).getoTFechaImplantacion())
-					.setParameter(14, lista.get(j).getoTEstadoActual())
-					.setParameter(15, lista.get(j).getRuta())
-					.setParameter(16, lista.get(j).getUsuario())
+			    	.setParameter(1, lista2.get(j).getId())
+			    	.setParameter(2, lista2.get(j).getAreaAdministrativa())
+			    	.setParameter(3, lista2.get(j).getSituacion())
+			    	.setParameter(4, lista2.get(j).getiDTramoCableOptico())
+			    	.setParameter(5, lista2.get(j).getCodigoTramoCableOptico())
+			    	.setParameter(6, lista2.get(j).getCantidadFibras())
+			    	.setParameter(7, lista2.get(j).getLongitudEstimadaTotal())
+			    	.setParameter(8, lista2.get(j).getPropiedad())
+			    	.setParameter(9, lista2.get(j).getPropietario())
+					.setParameter(10, lista2.get(j).getTrfoOtActual())
+					.setParameter(11, lista2.get(j).getTrfoOtOriginal())
+					.setParameter(12, lista2.get(j).getOrdenDeTrabajo())
+					.setParameter(13, lista2.get(j).getoTFechaImplantacion())
+					.setParameter(14, lista2.get(j).getoTEstadoActual())
+					.setParameter(15, lista2.get(j).getRuta())
+					.setParameter(16, lista2.get(j).getUsuario())
 			      .executeUpdate();
+			    
+			    // DIGO QUE TERMINO LA TRANSACTION
+			    entityManager.getTransaction().commit();
 				
 				// AUMENTO CONTADOR PARA ITERAR INSERCIONES EN BDD.
 				j++;
-					
+				
 			}
 						
 			// INFORME INSERCIONES SQL.
