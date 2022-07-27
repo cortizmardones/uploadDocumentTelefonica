@@ -117,6 +117,16 @@ public class UploadExcel {
 				dataCSV.setEmpresaColaboradora(lista.get(i)[9]);
 				dataCSV.setSemana(lista.get(i)[10]);
 				dataCSV.setSemanaReal(lista.get(i)[11]);
+				dataCSV.setSmell(lista.get(i)[12]);
+				dataCSV.setTargetReal(lista.get(i)[13]);
+				dataCSV.setTarget(lista.get(i)[14]);
+				dataCSV.setAnoCumplimiento(lista.get(i)[15]);
+				dataCSV.setOficinaCentralFttx(lista.get(i)[16]);
+				dataCSV.set_16LiberadoAVentas(lista.get(i)[17]);
+				dataCSV.setRegion(lista.get(i)[18]);
+				dataCSV.setTipoProyecto(lista.get(i)[19]);
+				dataCSV.setPep2(lista.get(i)[20]);
+				dataCSV.setOeccPep2(lista.get(i)[21]);
 				
 				entityManagerCSV.getTransaction().begin();
 				entityManagerCSV.persist(dataCSV);

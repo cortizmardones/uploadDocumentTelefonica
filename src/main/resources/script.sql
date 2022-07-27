@@ -1,35 +1,10 @@
--- public.data1 definition
+-- public.dataexcel definition
 
 -- Drop table
 
--- DROP TABLE public.data1;
+-- DROP TABLE public.dataexcel;
 
-CREATE TABLE public.data1 (
-	id int4 NOT NULL,
-	area_administrativa varchar NULL,
-	situacion varchar NULL,
-	id_tramo_cable_optico varchar NULL,
-	codigo_tramo_cable_optico varchar NULL,
-	cantidad_fibras varchar NULL,
-	longitud_estimada_total varchar NULL,
-	propiedad varchar NULL,
-	propietario varchar NULL,
-	trfo_ot_actual varchar NULL,
-	trfo_ot_original varchar NULL,
-	orden_trabajo varchar NULL,
-	ot_fecha_implantacion varchar NULL,
-	ot_estado_actual varchar NULL,
-	ruta varchar NULL,
-	usuario varchar NULL
-);
-
--- public.data2 definition
-
--- Drop table
-
--- DROP TABLE public.data2;
-
-CREATE TABLE public.data2 (
+CREATE TABLE public.dataexcel (
 	id int8 NOT NULL,
 	area_administrativa varchar(255) NULL,
 	cantidad_fibras varchar(255) NULL,
@@ -46,5 +21,39 @@ CREATE TABLE public.data2 (
 	trfo_ot_actual varchar(255) NULL,
 	trfo_ot_original varchar(255) NULL,
 	usuario varchar(255) NULL,
-	CONSTRAINT data2_pkey PRIMARY KEY (id)
+	CONSTRAINT dataexcel_pkey PRIMARY KEY (id)
+);
+
+
+-- public.datacsv definition
+
+-- Drop table
+
+-- DROP TABLE public.datacsv;
+
+CREATE TABLE public.datacsv (
+	id int8 NOT NULL,
+	"_16_liberado_a_ventas" varchar(255) NULL,
+	agencia varchar(255) NULL,
+	altura varchar(255) NULL,
+	ano_cumplimiento varchar(255) NULL,
+	cantidad_hp varchar(255) NULL,
+	direccion varchar(255) NULL,
+	empresa_adjudicada varchar(255) NULL,
+	empresa_colaboradora varchar(255) NULL,
+	estado_stb varchar(255) NULL,
+	identificador varchar(255) NULL,
+	nombre_proyecto varchar(255) NULL,
+	oecc_comuna varchar(255) NULL,
+	oecc_pep2 varchar(255) NULL,
+	oficina_central_fttx varchar(255) NULL,
+	pep2 varchar(255) NULL,
+	region varchar(255) NULL,
+	semana varchar(255) NULL,
+	semana_real varchar(255) NULL,
+	smell varchar(255) NULL,
+	target varchar(255) NULL,
+	target_real varchar(255) NULL,
+	tipo_proyecto varchar(255) NULL,
+	CONSTRAINT datacsv_pkey PRIMARY KEY (id)
 );
