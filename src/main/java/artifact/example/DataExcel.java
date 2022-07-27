@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class Data2 {
+public class DataExcel {
 	
 	@Id
 	@Column(name = "id" , precision = 1 , unique = true)
@@ -58,10 +58,10 @@ public class Data2 {
 	@Column(name = "usuario")
 	private String usuario;
 	
-	public Data2() {
+	public DataExcel() {
 	}
 
-	public Data2(long id , String areaAdministrativa, String situacion, String iDTramoCableOptico, String codigoTramoCableOptico, String cantidadFibras, String longitudEstimadaTotal, String propiedad, String propietario, String trfoOtActual, String trfoOtOriginal, String ordenDeTrabajo, String oTFechaImplantacion, String oTEstadoActual, String ruta, String usuario) {
+	public DataExcel(long id , String areaAdministrativa, String situacion, String iDTramoCableOptico, String codigoTramoCableOptico, String cantidadFibras, String longitudEstimadaTotal, String propiedad, String propietario, String trfoOtActual, String trfoOtOriginal, String ordenDeTrabajo, String oTFechaImplantacion, String oTEstadoActual, String ruta, String usuario) {
 		this.id = id;
 		this.areaAdministrativa = areaAdministrativa;
 		this.situacion = situacion;

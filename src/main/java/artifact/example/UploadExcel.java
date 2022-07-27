@@ -2,7 +2,9 @@ package artifact.example;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,10 +16,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import com.opencsv.CSVReader;
+
 public class UploadExcel {
 	
 	private static EntityManagerFactory entityManagerFactory;
-	private static EntityManager entityManager;
 
 	public static void main(String[] args) throws Exception {
 
@@ -26,18 +29,18 @@ public class UploadExcel {
 			long inicio = System.currentTimeMillis();
 									
 			entityManagerFactory = Persistence.createEntityManagerFactory("persist_unit_jpa");
-			entityManager = entityManagerFactory.createEntityManager();
+			EntityManager entityManagerExcel = entityManagerFactory.createEntityManager();
 			
-			File file = new File("C:\\uploadExcel\\7747.xlsx");
-			InputStream inputStream = new FileInputStream(file);
-
-			Workbook workbook = WorkbookFactory.create(inputStream);
+			// ################## LOGICA EXCEL ##################
+			File fileExcel = new File("C:\\uploadExcel\\7747.xlsx");
+			InputStream inputStreamExcel = new FileInputStream(fileExcel);
+			Workbook workbook = WorkbookFactory.create(inputStreamExcel);
 			Sheet sheet = workbook.getSheetAt(0);
 			
 			int j = 0;
 						
 			//for (int i = 1; i < sheet.getLastRowNum()-2; i++) {
-			for (int i = 1; i < 101; i++) {
+			for (int i = 1; i < 10; i++) {
 
 				Row rowData = sheet.getRow(i);
 				Cell cellAreaAdministrativa = rowData.getCell(0);
@@ -57,37 +60,80 @@ public class UploadExcel {
 				Cell cellUsuario = rowData.getCell(14);
 								
 				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEM�S VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNARIO.
-				Data2 data2 = new Data2();
-				data2.setId(j+1);
-				data2.setAreaAdministrativa((cellAreaAdministrativa != null ? cellAreaAdministrativa.getStringCellValue() : ""));
-				data2.setSituacion(cellSituacion != null ? String.valueOf(cellSituacion.getStringCellValue()) : "");
-				data2.setiDTramoCableOptico(cellIdTramoCableOptico != null ? String.valueOf(cellIdTramoCableOptico.getNumericCellValue()): "");
-				data2.setCodigoTramoCableOptico(cellcodigoTramoCableOptico != null ? cellcodigoTramoCableOptico.getStringCellValue() : "");
-				data2.setCantidadFibras(cellCantidadFibras != null ? String.valueOf(cellCantidadFibras.getNumericCellValue()) : "");
-				data2.setLongitudEstimadaTotal(cellLongitudEstimadaTotal != null? String.valueOf(cellLongitudEstimadaTotal.getNumericCellValue()): "");
-				data2.setPropiedad(cellPropiedad != null ? cellPropiedad.getStringCellValue() : "");
-				data2.setPropietario(cellPropietario != null ? cellPropietario.getStringCellValue() : "");
-				data2.setTrfoOtActual(cellTrfoActual != null ? cellTrfoActual.getStringCellValue() : "");
-				data2.setTrfoOtOriginal(cellTrfoOriginal != null ? String.valueOf(cellTrfoOriginal.getNumericCellValue()) : "");
-				data2.setOrdenDeTrabajo(cellOrdenTrabajo != null ? cellOrdenTrabajo.getStringCellValue() : "");
-				data2.setoTFechaImplantacion(cellOtFechaImplantacion != null ? cellOtFechaImplantacion.getStringCellValue() : "");
-				data2.setoTEstadoActual(CellOtEstadoActual != null ? CellOtEstadoActual.getStringCellValue() : "");
-				data2.setRuta(cellRuta != null ? cellRuta.getStringCellValue() : "");
-				data2.setUsuario(cellUsuario != null ? cellUsuario.getStringCellValue() : "");
+				DataExcel dataExcel = new DataExcel();
+				dataExcel.setId(j+1);
+				dataExcel.setAreaAdministrativa((cellAreaAdministrativa != null ? cellAreaAdministrativa.getStringCellValue() : ""));
+				dataExcel.setSituacion(cellSituacion != null ? String.valueOf(cellSituacion.getStringCellValue()) : "");
+				dataExcel.setiDTramoCableOptico(cellIdTramoCableOptico != null ? String.valueOf(cellIdTramoCableOptico.getNumericCellValue()): "");
+				dataExcel.setCodigoTramoCableOptico(cellcodigoTramoCableOptico != null ? cellcodigoTramoCableOptico.getStringCellValue() : "");
+				dataExcel.setCantidadFibras(cellCantidadFibras != null ? String.valueOf(cellCantidadFibras.getNumericCellValue()) : "");
+				dataExcel.setLongitudEstimadaTotal(cellLongitudEstimadaTotal != null? String.valueOf(cellLongitudEstimadaTotal.getNumericCellValue()): "");
+				dataExcel.setPropiedad(cellPropiedad != null ? cellPropiedad.getStringCellValue() : "");
+				dataExcel.setPropietario(cellPropietario != null ? cellPropietario.getStringCellValue() : "");
+				dataExcel.setTrfoOtActual(cellTrfoActual != null ? cellTrfoActual.getStringCellValue() : "");
+				dataExcel.setTrfoOtOriginal(cellTrfoOriginal != null ? String.valueOf(cellTrfoOriginal.getNumericCellValue()) : "");
+				dataExcel.setOrdenDeTrabajo(cellOrdenTrabajo != null ? cellOrdenTrabajo.getStringCellValue() : "");
+				dataExcel.setoTFechaImplantacion(cellOtFechaImplantacion != null ? cellOtFechaImplantacion.getStringCellValue() : "");
+				dataExcel.setoTEstadoActual(CellOtEstadoActual != null ? CellOtEstadoActual.getStringCellValue() : "");
+				dataExcel.setRuta(cellRuta != null ? cellRuta.getStringCellValue() : "");
+				dataExcel.setUsuario(cellUsuario != null ? cellUsuario.getStringCellValue() : "");
 							
-				entityManager.getTransaction().begin();
-				entityManager.persist(data2);
-			    entityManager.getTransaction().commit();
+				entityManagerExcel.getTransaction().begin();
+				entityManagerExcel.persist(dataExcel);
+				entityManagerExcel.getTransaction().commit();
 				
 				j++;
 				
 			}
+			
+			// CIERRO ENTITY MANAGER DE LOS EXCEL
+			entityManagerExcel.close();
+			
+			
+			// ################## LOGICA CSV ##################
+			String fileCSV = "C:\\uploadExcel\\Junio.csv";
+			CSVReader csvReader = new CSVReader(new FileReader(fileCSV));
+			
+			// OBTENGO UN NUEVO GESTOR DE PERSISTENCIA
+			EntityManager entityManagerCSV = entityManagerFactory.createEntityManager();
+			
+			// TRANSFORMO EL OBJETO A UNA LISTA ITERABLE
+			List<String[]> lista = csvReader.readAll();
+			
+			// SON 47 ELEMENTOS PERO SOLO CREE UN DTO CON 12 ELEMENTOS POR AHORA PARA PROBAR
+			for(int i = 1 ; i < lista.size() ; i++) {
+				
+				DataCSV dataCSV = new DataCSV();
+				dataCSV.setId(i);
+				dataCSV.setIdentificador(lista.get(i)[0]);
+				dataCSV.setNombreProyecto(lista.get(i)[1]);
+				dataCSV.setDirrecion(lista.get(i)[2]);
+				dataCSV.setAltura(lista.get(i)[3]);
+				dataCSV.setCantidadHp(lista.get(i)[4]);
+				dataCSV.setEstadoStb(lista.get(i)[5]);
+				dataCSV.setAgencia(lista.get(i)[6]);
+				dataCSV.setOeccComuna(lista.get(i)[7]);
+				dataCSV.setEmpresaAdjudicada(lista.get(i)[8]);
+				dataCSV.setEmpresaColaboradora(lista.get(i)[9]);
+				dataCSV.setSemana(lista.get(i)[10]);
+				dataCSV.setSemanaReal(lista.get(i)[11]);
+				
+				entityManagerCSV.getTransaction().begin();
+				entityManagerCSV.persist(dataCSV);
+				entityManagerCSV.getTransaction().commit();
+				
+			}
+			
+			// CERRAMOS EL OBJETO PARA PROCESAR CSV Y EN ENTITY MANAGER DE LOS CSV
+			csvReader.close();
+			entityManagerCSV.close();
+			
 								
 			long fin = System.currentTimeMillis();
 			double segundos = (double) ((fin - inicio) / 1000);
 			System.out.println("CARGA EXITOSA / " + segundos + " segundos");
 						
-			entityManager.close();
+			
 
 		} catch (Exception e) {
 

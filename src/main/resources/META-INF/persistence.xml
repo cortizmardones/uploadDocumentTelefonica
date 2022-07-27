@@ -4,7 +4,8 @@ xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org
 		
 	<persistence-unit name="persist_unit_jpa">
 			
-		<class>artifact.example.Data2</class>
+		<class>artifact.example.DataExcel</class>
+		<class>artifact.example.DataCSV</class>
 		
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/telefonica" />
