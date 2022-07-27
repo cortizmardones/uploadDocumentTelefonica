@@ -18,7 +18,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import com.opencsv.CSVReader;
 
-public class UploadExcel {
+public class UploadDocument {
 	
 	private static EntityManagerFactory entityManagerFactory;
 
@@ -40,7 +40,7 @@ public class UploadExcel {
 			int j = 0;
 						
 			//for (int i = 1; i < sheet.getLastRowNum()-2; i++) {
-			for (int i = 1; i < 10; i++) {
+			for (int i = 1; i < 101; i++) {
 
 				Row rowData = sheet.getRow(i);
 				Cell cellAreaAdministrativa = rowData.getCell(0);
@@ -58,13 +58,13 @@ public class UploadExcel {
 				Cell CellOtEstadoActual = rowData.getCell(12);
 				Cell cellRuta = rowData.getCell(13);
 				Cell cellUsuario = rowData.getCell(14);
-								
+				
 				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEM�S VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNARIO.
 				DataExcel dataExcel = new DataExcel();
 				dataExcel.setId(j+1);
 				dataExcel.setAreaAdministrativa((cellAreaAdministrativa != null ? cellAreaAdministrativa.getStringCellValue() : ""));
 				dataExcel.setSituacion(cellSituacion != null ? String.valueOf(cellSituacion.getStringCellValue()) : "");
-				dataExcel.setiDTramoCableOptico(cellIdTramoCableOptico != null ? String.valueOf(cellIdTramoCableOptico.getNumericCellValue()): "");
+				dataExcel.setIdTramoCableOptico(cellIdTramoCableOptico != null ? String.valueOf(cellIdTramoCableOptico.getNumericCellValue()): "");
 				dataExcel.setCodigoTramoCableOptico(cellcodigoTramoCableOptico != null ? cellcodigoTramoCableOptico.getStringCellValue() : "");
 				dataExcel.setCantidadFibras(cellCantidadFibras != null ? String.valueOf(cellCantidadFibras.getNumericCellValue()) : "");
 				dataExcel.setLongitudEstimadaTotal(cellLongitudEstimadaTotal != null? String.valueOf(cellLongitudEstimadaTotal.getNumericCellValue()): "");
@@ -73,11 +73,11 @@ public class UploadExcel {
 				dataExcel.setTrfoOtActual(cellTrfoActual != null ? cellTrfoActual.getStringCellValue() : "");
 				dataExcel.setTrfoOtOriginal(cellTrfoOriginal != null ? String.valueOf(cellTrfoOriginal.getNumericCellValue()) : "");
 				dataExcel.setOrdenDeTrabajo(cellOrdenTrabajo != null ? cellOrdenTrabajo.getStringCellValue() : "");
-				dataExcel.setoTFechaImplantacion(cellOtFechaImplantacion != null ? cellOtFechaImplantacion.getStringCellValue() : "");
-				dataExcel.setoTEstadoActual(CellOtEstadoActual != null ? CellOtEstadoActual.getStringCellValue() : "");
+				dataExcel.setOtFechaImplantacion(cellOtFechaImplantacion != null ? cellOtFechaImplantacion.getStringCellValue() : "");
+				dataExcel.setOtEstadoActual(CellOtEstadoActual != null ? CellOtEstadoActual.getStringCellValue() : "");
 				dataExcel.setRuta(cellRuta != null ? cellRuta.getStringCellValue() : "");
 				dataExcel.setUsuario(cellUsuario != null ? cellUsuario.getStringCellValue() : "");
-							
+				
 				entityManagerExcel.getTransaction().begin();
 				entityManagerExcel.persist(dataExcel);
 				entityManagerExcel.getTransaction().commit();

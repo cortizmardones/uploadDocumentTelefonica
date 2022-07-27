@@ -1,4 +1,4 @@
-artifact\example\Data.class
-artifact\example\Data2.class
-artifact\example\UploadExcel.class
-artifact\example\ConectarBDD.class
+artifact\example\DataCSV.class
+artifact\example\DataExcel.class
+artifact\example\ConnectionJBDC.class
+artifact\example\UploadDocument.class

@@ -5,8 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Data;
+
 @Entity
 @Table
+@Data
 public class DataExcel {
 	
 	@Id
@@ -20,7 +23,7 @@ public class DataExcel {
 	private String situacion;
 	
 	@Column(name = "id_tramo_cable_optico")
-	private String iDTramoCableOptico;
+	private String idTramoCableOptico;
 	
 	@Column(name = "codigo_tramo_cable_optico")
 	private String codigoTramoCableOptico;
@@ -47,10 +50,10 @@ public class DataExcel {
 	private String ordenDeTrabajo;
 	
 	@Column(name = "ot_fecha_implantacion")
-	private String oTFechaImplantacion;
+	private String otFechaImplantacion;
 	
 	@Column(name = "ot_estado_actual")
-	private String oTEstadoActual;
+	private String otEstadoActual;
 	
 	@Column(name = "ruta")
 	private String ruta;
@@ -58,158 +61,4 @@ public class DataExcel {
 	@Column(name = "usuario")
 	private String usuario;
 	
-	public DataExcel() {
-	}
-
-	public DataExcel(long id , String areaAdministrativa, String situacion, String iDTramoCableOptico, String codigoTramoCableOptico, String cantidadFibras, String longitudEstimadaTotal, String propiedad, String propietario, String trfoOtActual, String trfoOtOriginal, String ordenDeTrabajo, String oTFechaImplantacion, String oTEstadoActual, String ruta, String usuario) {
-		this.id = id;
-		this.areaAdministrativa = areaAdministrativa;
-		this.situacion = situacion;
-		this.iDTramoCableOptico = iDTramoCableOptico;
-		this.codigoTramoCableOptico = codigoTramoCableOptico;
-		this.cantidadFibras = cantidadFibras;
-		this.longitudEstimadaTotal = longitudEstimadaTotal;
-		this.propiedad = propiedad;
-		this.propietario = propietario;
-		this.trfoOtActual = trfoOtActual;
-		this.trfoOtOriginal = trfoOtOriginal;
-		this.ordenDeTrabajo = ordenDeTrabajo;
-		this.oTFechaImplantacion = oTFechaImplantacion;
-		this.oTEstadoActual = oTEstadoActual;
-		this.ruta = ruta;
-		this.usuario = usuario;
-	}
-	
-	
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getAreaAdministrativa() {
-		return areaAdministrativa;
-	}
-
-	public void setAreaAdministrativa(String areaAdministrativa) {
-		this.areaAdministrativa = areaAdministrativa;
-	}
-
-	public String getSituacion() {
-		return situacion;
-	}
-
-	public void setSituacion(String situacion) {
-		this.situacion = situacion;
-	}
-
-	public String getiDTramoCableOptico() {
-		return iDTramoCableOptico;
-	}
-
-	public void setiDTramoCableOptico(String iDTramoCableOptico) {
-		this.iDTramoCableOptico = iDTramoCableOptico;
-	}
-
-	public String getCodigoTramoCableOptico() {
-		return codigoTramoCableOptico;
-	}
-
-	public void setCodigoTramoCableOptico(String codigoTramoCableOptico) {
-		this.codigoTramoCableOptico = codigoTramoCableOptico;
-	}
-
-	public String getCantidadFibras() {
-		return cantidadFibras;
-	}
-
-	public void setCantidadFibras(String cantidadFibras) {
-		this.cantidadFibras = cantidadFibras;
-	}
-
-	public String getLongitudEstimadaTotal() {
-		return longitudEstimadaTotal;
-	}
-
-	public void setLongitudEstimadaTotal(String longitudEstimadaTotal) {
-		this.longitudEstimadaTotal = longitudEstimadaTotal;
-	}
-
-	public String getPropiedad() {
-		return propiedad;
-	}
-
-	public void setPropiedad(String propiedad) {
-		this.propiedad = propiedad;
-	}
-
-	public String getPropietario() {
-		return propietario;
-	}
-
-	public void setPropietario(String propietario) {
-		this.propietario = propietario;
-	}
-
-	public String getTrfoOtActual() {
-		return trfoOtActual;
-	}
-
-	public void setTrfoOtActual(String trfoOtActual) {
-		this.trfoOtActual = trfoOtActual;
-	}
-
-	public String getTrfoOtOriginal() {
-		return trfoOtOriginal;
-	}
-
-	public void setTrfoOtOriginal(String trfoOtOriginal) {
-		this.trfoOtOriginal = trfoOtOriginal;
-	}
-
-	public String getOrdenDeTrabajo() {
-		return ordenDeTrabajo;
-	}
-
-	public void setOrdenDeTrabajo(String ordenDeTrabajo) {
-		this.ordenDeTrabajo = ordenDeTrabajo;
-	}
-
-	public String getoTFechaImplantacion() {
-		return oTFechaImplantacion;
-	}
-
-	public void setoTFechaImplantacion(String oTFechaImplantacion) {
-		this.oTFechaImplantacion = oTFechaImplantacion;
-	}
-
-	public String getoTEstadoActual() {
-		return oTEstadoActual;
-	}
-
-	public void setoTEstadoActual(String oTEstadoActual) {
-		this.oTEstadoActual = oTEstadoActual;
-	}
-
-	public String getRuta() {
-		return ruta;
-	}
-
-	public void setRuta(String ruta) {
-		this.ruta = ruta;
-	}
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
-	}
-	
-	
-	
-
 }
