@@ -14,8 +14,6 @@ public class ConnectionJBDC {
 
 		try {
 			
-			//Genere un token 
-			
 			// OBTENEMOS UN OBJETO DE TIPO CONNECTION CON EL DRIVER JDBC
 			connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/telefonica", USER, PASS);
 
