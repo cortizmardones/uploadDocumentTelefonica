@@ -16,6 +16,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import artifact.example.DataCSV;
+import artifact.example.DataExcel;
+
 import com.opencsv.CSVReader;
 
 public class UploadDocument {
@@ -37,8 +40,6 @@ public class UploadDocument {
 			Workbook workbook = WorkbookFactory.create(inputStreamExcel);
 			Sheet sheet = workbook.getSheetAt(0);
 			
-			int j = 0;
-						
 			//for (int i = 1; i < sheet.getLastRowNum()-2; i++) {
 			for (int i = 1; i < 101; i++) {
 
@@ -61,7 +62,7 @@ public class UploadDocument {
 				
 				// CREO EL OBJETO PARA ALMACENAR LOS DATOS EN MEMORIA Y ADEM�S VALIDO LA ESTRUCTURA DE LOS DATOS DE EXCEL CON IF TERNARIO.
 				DataExcel dataExcel = new DataExcel();
-				dataExcel.setId(j+1);
+				dataExcel.setId(i);
 				dataExcel.setAreaAdministrativa((cellAreaAdministrativa != null ? cellAreaAdministrativa.getStringCellValue() : ""));
 				dataExcel.setSituacion(cellSituacion != null ? String.valueOf(cellSituacion.getStringCellValue()) : "");
 				dataExcel.setIdTramoCableOptico(cellIdTramoCableOptico != null ? String.valueOf(cellIdTramoCableOptico.getNumericCellValue()): "");
@@ -81,9 +82,7 @@ public class UploadDocument {
 				entityManagerExcel.getTransaction().begin();
 				entityManagerExcel.persist(dataExcel);
 				entityManagerExcel.getTransaction().commit();
-				
-				j++;
-				
+							
 			}
 			
 			// CIERRO ENTITY MANAGER DE LOS EXCEL

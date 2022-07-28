@@ -61,4 +61,10 @@ public class DataExcel {
 	@Column(name = "usuario")
 	private String usuario;
 	
+	public DataExcel() {
+		
+	}
+	
+	
+	
 }
