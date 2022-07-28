@@ -170,6 +170,8 @@ public class UploadDocument {
 			// LANZO UNA EXCEPCI�N (SI DETIENE EL RUNTIME).
 			throw new Exception(e);
 		}
+		
+		System.exit(1);
 
 	}
 
