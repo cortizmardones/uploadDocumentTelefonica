@@ -82,6 +82,69 @@ public class DataCSV {
 	@Column(name = "oecc_pep2")
 	private String oeccPep2;
 	
+	@Column(name = "oeci")
+	private String oeci;
+	
+	@Column(name = "related_oeci")
+	private String relatedOeci;
+	
+	@Column(name = "oecc")
+	private String oecc;
+	
+	@Column(name = "related_oecc")
+	private String relatedOecc;
+	
+	@Column(name = "numero_cubicacion")
+	private String numeroCubicacion;
+	
+	@Column(name = "oecc_cubicacion")
+	private String oeccCubicacion;
+	
+	@Column(name = "estado_cruzado_logica")
+	private String estadoCruzadoLogica;
+	
+	@Column(name = "estado_cruzado_fisica")
+	private String estadoCruzadoFisica;
+	
+	@Column(name = "tipo")
+	private String tipo;
+	
+	@Column(name = "estado_asignacion_recurso")
+	private String estadoAsignacionRecurso;
+	
+	@Column(name = "estado_creacion_direcciones")
+	private String estadoCreacionDirecciones;
+	
+	@Column(name = "nombre_pm")
+	private String nombrePm;
+	
+	@Column(name = "hp_cargadas_osp")
+	private String hpCargadasOsp;
+	
+	@Column(name = "osp_n_equipos")
+	private String ospNEquipos;
+	
+	@Column(name = "osp_coberturas")
+	private String ospCoberturas;
+	
+	@Column(name = "osp_cap_fo")
+	private String ospCapFo;
+	
+	@Column(name = "osp_ocu")
+	private String ospOcu;
+	
+	@Column(name = "osp_asi")
+	private String ospAsi;
+	
+	@Column(name = "tipo_caja")
+	private String tipoCaja;
+	
+	@Column(name = "oecc_actividad")
+	private String oeccActividad;
+	
+	@Column(name = "oecc_resp_actividad")
+	private String oeccRespActividad;
+	
 	public DataCSV() {
 		
 	}
