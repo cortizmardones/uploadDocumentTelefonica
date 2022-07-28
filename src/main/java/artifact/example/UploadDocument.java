@@ -16,9 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import artifact.example.DataCSV;
-import artifact.example.DataExcel;
-
 import com.opencsv.CSVReader;
 
 public class UploadDocument {
@@ -150,45 +147,9 @@ public class UploadDocument {
 			e.printStackTrace();
 
 			// LANZO UNA EXCEPCI�N (SI DETIENE EL RUNTIME).
-			throw new Exception();
+			throw new Exception(e);
 		}
 
 	}
 
 }
-
-
-
-////IMPRIMO POR CONSOLA EL VALOR DELOS ENCABEZADOS (NO BORRAR)
-//// OBTENGO LA PRIMERA FILA (ENCABEZADOS / HEADER)
-//Row rowHeader = sheet.getRow(0);
-//
-//// RECORRER LAS CABECERAS. (SON 14 REGISTROS POR FILA)
-//for (int i = 0; i < rowHeader.getPhysicalNumberOfCells(); i++) {
-//	
-//	// CREO UNA CELDA EN CADA ELEMENTO PARA PODER LEER SU VALOR
-//	Cell cellHeader = rowHeader.getCell(i);
-//	
-//	//IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA
-//	System.out.println(i+1 + " : " + cellHeader.getStringCellValue());
-//}
-
-
-
-////IMPRIMO POR CONSOLA EL VALOR DE CADA CELDA (NO BORRAR)
-//System.out.println("Fila: " + i + " - 1.�rea Administrativa: " + cellAreaAdministrativa);
-//System.out.println("Fila: " + i + " - 2.Situaci�n: " + cellSituacion);
-//System.out.println("Fila: " + i + " - 3.ID Tramo Cable �ptico: " + cellIdTramoCableOptico);
-//System.out.println("Fila: " + i + " - 4.C�digo tramo cable �ptico: " + cellcodigoTramoCableOptico);
-//System.out.println("Fila: " + i + " - 5.Cantidad fibras: " + cellCantidadFibras);
-//System.out.println("Fila: " + i + " - 6.Longitud estimada Total: " + cellLongitudEstimadaTotal);
-//System.out.println("Fila: " + i + " - 7.Propiedad: " + cellPropiedad);
-//System.out.println("Fila: " + i + " - 8.Propietario: " + cellPropietario);
-//System.out.println("Fila: " + i + " - 9.TRFO OT Actual: " + cellTrfoActual);
-//System.out.println("Fila: " + i + " - 10.TRFO OT Original: " + i + " , (10) " + cellTrfoOriginal);
-//System.out.println("Fila: " + i + " - 11.Orden trabajo: " + cellOrdenTrabajo);
-//System.out.println("Fila: " + i + " - 12.OT Fecha Implantaci�n: " + cellOtFechaImplantacion);
-//System.out.println("Fila: " + i + " - 13.OT Estado actual: " + CellOtEstadoActual);
-//System.out.println("Fila: " + i + " - 14.Ruta: " + cellRuta);
-//System.out.println("Fila: " + i + " - 15.Usuario: " + cellUsuario);
-//System.out.println("");
