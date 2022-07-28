@@ -24,7 +24,6 @@ CREATE TABLE public.dataexcel (
 	CONSTRAINT dataexcel_pkey PRIMARY KEY (id)
 );
 
-
 -- public.datacsv definition
 
 -- Drop table
@@ -41,19 +40,40 @@ CREATE TABLE public.datacsv (
 	direccion varchar(255) NULL,
 	empresa_adjudicada varchar(255) NULL,
 	empresa_colaboradora varchar(255) NULL,
+	estado_asignacion_recurso varchar(255) NULL,
+	estado_creacion_direcciones varchar(255) NULL,
+	estado_cruzado_fisica varchar(255) NULL,
+	estado_cruzado_logica varchar(255) NULL,
 	estado_stb varchar(255) NULL,
+	hp_cargadas_osp varchar(255) NULL,
 	identificador varchar(255) NULL,
+	nombre_pm varchar(255) NULL,
 	nombre_proyecto varchar(255) NULL,
+	numero_cubicacion varchar(255) NULL,
+	oecc varchar(255) NULL,
+	oecc_actividad varchar(255) NULL,
 	oecc_comuna varchar(255) NULL,
+	oecc_cubicacion varchar(255) NULL,
 	oecc_pep2 varchar(255) NULL,
+	oecc_resp_actividad varchar(255) NULL,
+	oeci varchar(255) NULL,
 	oficina_central_fttx varchar(255) NULL,
+	osp_asi varchar(255) NULL,
+	osp_cap_fo varchar(255) NULL,
+	osp_coberturas varchar(255) NULL,
+	osp_n_equipos varchar(255) NULL,
+	osp_ocu varchar(255) NULL,
 	pep2 varchar(255) NULL,
 	region varchar(255) NULL,
+	related_oecc varchar(255) NULL,
+	related_oeci varchar(255) NULL,
 	semana varchar(255) NULL,
 	semana_real varchar(255) NULL,
 	smell varchar(255) NULL,
 	target varchar(255) NULL,
 	target_real varchar(255) NULL,
+	tipo varchar(255) NULL,
+	tipo_caja varchar(255) NULL,
 	tipo_proyecto varchar(255) NULL,
 	CONSTRAINT datacsv_pkey PRIMARY KEY (id)
 );

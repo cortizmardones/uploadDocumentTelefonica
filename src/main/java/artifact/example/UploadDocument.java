@@ -96,7 +96,7 @@ public class UploadDocument {
 			// TRANSFORMO EL OBJETO A UNA LISTA ITERABLE
 			List<String[]> lista = csvReader.readAll();
 			
-			// SON 47 ELEMENTOS PERO SOLO CREE UN DTO CON 12 ELEMENTOS POR AHORA PARA PROBAR
+			// SON 78 ELEMENTOS (CONSULTAR SI HAY COLUMNAS NO NECESARIAS)
 			for(int i = 1 ; i < lista.size() ; i++) {
 				
 				DataCSV dataCSV = new DataCSV();
@@ -123,6 +123,27 @@ public class UploadDocument {
 				dataCSV.setTipoProyecto(lista.get(i)[19]);
 				dataCSV.setPep2(lista.get(i)[20]);
 				dataCSV.setOeccPep2(lista.get(i)[21]);
+				dataCSV.setOeci(lista.get(i)[22]);
+				dataCSV.setRelatedOeci(lista.get(i)[23]);
+				dataCSV.setOecc(lista.get(i)[24]);
+				dataCSV.setRelatedOecc(lista.get(i)[25]);
+				dataCSV.setNumeroCubicacion(lista.get(i)[26]);
+				dataCSV.setOeccCubicacion(lista.get(i)[27]);
+				dataCSV.setEstadoCruzadoLogica(lista.get(i)[28]);
+				dataCSV.setEstadoCruzadoFisica(lista.get(i)[29]);
+				dataCSV.setTipo(lista.get(i)[30]);
+				dataCSV.setEstadoAsignacionRecurso(lista.get(i)[31]);
+				dataCSV.setEstadoCreacionDirecciones(lista.get(i)[32]);
+				dataCSV.setNombrePm(lista.get(i)[33]);
+				dataCSV.setHpCargadasOsp(lista.get(i)[34]);
+				dataCSV.setOspNEquipos(lista.get(i)[35]);
+				dataCSV.setOspCoberturas(lista.get(i)[36]);
+				dataCSV.setOspCapFo(lista.get(i)[37]);
+				dataCSV.setOspOcu(lista.get(i)[38]);
+				dataCSV.setOspAsi(lista.get(i)[39]);
+				dataCSV.setTipoCaja(lista.get(i)[40]);
+				dataCSV.setOeccActividad(lista.get(i)[41]);
+				dataCSV.setOeccRespActividad(lista.get(i)[42]);
 				
 				entityManagerCSV.getTransaction().begin();
 				entityManagerCSV.persist(dataCSV);
