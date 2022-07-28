@@ -82,4 +82,8 @@ public class DataCSV {
 	@Column(name = "oecc_pep2")
 	private String oeccPep2;
 	
+	public DataCSV() {
+		
+	}
+	
 }
